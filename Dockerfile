@@ -1,16 +1,35 @@
-FROM node:18-bullseye
+# Use the official n8n image from n8n.io as the base
+FROM docker.n8n.io/n8nio/n8n
 
-ARG N8N_VERSION=1.56.1
+# Switch to root to install packages
+USER root
 
-RUN apt-get update && \
-    apt-get install -y ffmpeg graphicsmagick tzdata python3 build-essential && \
-    npm_config_user=root npm install -g n8n@${N8N_VERSION} && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
+# Install Docker CLI and ffmpeg
+RUN apk add --no-cache docker-cli ffmpeg
 
-WORKDIR /data
+# Create the docker group if it does not exist and add the 'node' user to it
+RUN addgroup -S docker || true
+RUN addgroup node docker
 
-ENV N8N_USER_ID=root
+# Switch back to the default user 'node'
+USER node
+```
 
-EXPOSE 5678
+#### `docker-compose.service`
 
-CMD ["n8n", "start"]
+```ini
+[Unit]
+Description=Docker Compose Service
+After=network.target docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/path/to/your/n8n-docker-ffmpeg
+ExecStart=/usr/bin/docker-compose build --no-cache
+ExecStartPost=/usr/bin/docker-compose up -d
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target
