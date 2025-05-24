@@ -1,13 +1,16 @@
-# Start from official n8n image (Debian-based, not Alpine)
 FROM node:18-bullseye
 
-# Switch to root to install system packages
-USER root
+ARG N8N_VERSION=1.56.1
 
-# Install required tools
 RUN apt-get update && \
-    apt-get install -y ffmpeg graphicsmagick python3 build-essential && \
+    apt-get install -y ffmpeg graphicsmagick tzdata python3 build-essential && \
+    npm_config_user=root npm install -g n8n@${N8N_VERSION} && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Switch back to non-root user for security
-USER node
+WORKDIR /data
+
+ENV N8N_USER_ID=root
+
+EXPOSE 5678
+
+CMD ["n8n", "start"]
