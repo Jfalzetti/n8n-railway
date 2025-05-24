@@ -1,5 +1,5 @@
 # Start from official n8n image (Debian-based, not Alpine)
-FROM n8nio/n8n:1.56.1-bullseye
+FROM node:18-bullseye
 
 # Switch to root to install system packages
 USER root
