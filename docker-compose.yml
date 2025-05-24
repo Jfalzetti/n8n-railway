@@ -6,17 +6,21 @@ services:
     restart: always
     ports:
       - "5678:5678"
-    environment:
-      - DB_TYPE=postgresdb
-      - DB_POSTGRESDB_HOST=postgres
-      - DB_POSTGRESDB_PORT=5432
-      - DB_POSTGRESDB_DATABASE=n8n
-      - DB_POSTGRESDB_USER=postgres
-      - DB_POSTGRESDB_PASSWORD=yourpassword
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=admin
-      - N8N_BASIC_AUTH_PASSWORD=adminpassword
-      - N8N_HOST=localhost
+environment:
+  - DB_TYPE=postgresdb
+  - DB_POSTGRESDB_HOST=postgres
+  - DB_POSTGRESDB_PORT=5432
+  - DB_POSTGRESDB_DATABASE=n8n
+  - DB_POSTGRESDB_USER=postgres
+  - DB_POSTGRESDB_PASSWORD=yourpassword
+  - N8N_BASIC_AUTH_ACTIVE=true
+  - N8N_BASIC_AUTH_USER=admin
+  - N8N_BASIC_AUTH_PASSWORD=adminpassword
+  - N8N_HOST=${DOMAIN}
+  - N8N_PORT=5678
+  - N8N_PROTOCOL=https
+  - WEBHOOK_URL=https://${DOMAIN}
+
     depends_on:
       - postgres
     volumes:
