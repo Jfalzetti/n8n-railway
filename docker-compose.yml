@@ -5,7 +5,7 @@ services:
     build: .
     restart: always
     ports:
-      - 5678:5678
+      - "5678:5678"
     environment:
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
@@ -16,9 +16,11 @@ services:
       - N8N_BASIC_AUTH_ACTIVE=true
       - N8N_BASIC_AUTH_USER=admin
       - N8N_BASIC_AUTH_PASSWORD=adminpassword
-      - N8N_HOST=yourdomain.com
+      - N8N_HOST=localhost
     depends_on:
       - postgres
+    volumes:
+      - n8n_data:/home/node/.n8n
 
   postgres:
     image: postgres:15
@@ -32,4 +34,4 @@ services:
 
 volumes:
   db_data:
-    driver: local
+  n8n_data:
