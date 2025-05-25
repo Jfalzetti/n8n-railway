@@ -17,9 +17,10 @@ services:
       - N8N_BASIC_AUTH_USER=admin
       - N8N_BASIC_AUTH_PASSWORD=adminpassword
       - N8N_HOST=n8n-railway-u45699.vm.elestio.app
+      - WEBHOOK_URL=https://n8n-railway-u45699.vm.elestio.app
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
-      - WEBHOOK_URL=https://n8n-railway-u45699.vm.elestio.app
+      - N8N_TUNNEL_SUBDOMAIN=n8n-railway-u45699
     depends_on:
       - postgres
     volumes:
