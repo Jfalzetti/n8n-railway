@@ -1,12 +1,10 @@
-version: '3.8'
-
 services:
   n8n:
     build: .
     restart: always
     ports:
       - "5678:5678"
-    command: n8n start --tunnel
+    command: n8n start
     environment:
       - DB_TYPE=postgresdb
       - DB_POSTGRESDB_HOST=postgres
@@ -17,26 +15,16 @@ services:
       - N8N_BASIC_AUTH_ACTIVE=true
       - N8N_BASIC_AUTH_USER=admin
       - N8N_BASIC_AUTH_PASSWORD=adminpassword
-      - N8N_HOST=n8n-railway-u45699.vm.elestio.app
-      - WEBHOOK_URL=https://n8n-railway-u45699.vm.elestio.app
+      - N8N_HOST=localhost
       - N8N_PORT=5678
-      - N8N_PROTOCOL=https
-      - N8N_TUNNEL_SUBDOMAIN=n8n-railway-u45699
+      - N8N_PROTOCOL=http
+      - WEBHOOK_URL=http://localhost:5678
     depends_on:
       - postgres
     volumes:
       - n8n_data:/home/node/.n8n
-
-  postgres:
-    image: postgres:15
-    restart: always
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=yourpassword
-      - POSTGRES_DB=n8n
-    volumes:
-      - db_data:/var/lib/postgresql/data
-
-volumes:
-  db_data:
-  n8n_data:
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5678/"]
+      interval: 20s
+      timeout: 5s
+      retries: 10
